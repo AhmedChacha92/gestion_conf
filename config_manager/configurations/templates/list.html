@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Configurations{% endblock %}
+
+{% block content %}
+    <h1>Liste des Configurations</h1>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Nom du Client</th>
+                <th>Opérateur</th>
+                <th>Service</th>
+                <th>IP Privée</th>
+                <th>IP Publique</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for config in configs %}
+            <tr>
+                <td>{{ config.client_name }}</td>
+                <td>{{ config.operator }}</td>
+                <td>{{ config.service }}</td>
+                <td>{{ config.ip_private }}</td>
+                <td>{{ config.ip_public }}</td>
+                <td>
+                    <a href="{% url 'configurations:edit' config.pk %}">Modifier</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'configurations:add' %}" class="button-link">Ajouter une Configuration</a>
+    <a href="{% url 'configurations:download_excel' %}" class="button-link">Télécharger Excel</a>
+{% endblock %}

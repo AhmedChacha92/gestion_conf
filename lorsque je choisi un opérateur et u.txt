@@ -1,0 +1,19 @@
+lorsque je choisi un opérateur et un service, on récupère une  une fiche txt .
+
+Des fonctions qui vont lire le fichier txt, le fermer, récupérer les donnés du fichier en fonction du formulaire qu'on va utiliser. 
+
+
+le Template généré aura des variables propres à modifier, les variables seront modifiable via le formulaire de modification du Template. 
+
+s'assurer que chaque variables sont modifiable uniquement entre elle en ne touchant pas au reste de la Template.
+
+les variables changeables seront doté d'un "$" de type string. 
+
+
+lorsqu'on selectionne une Template 
+finalité : lorsque l'on a bien généré notre fiche avec les variables modifiés, une nouvelle fiche .txt ce télécharge avec les nouvelles variables enregistré et on peu l'ouvrir pour le lire sans toucher au Template de base.
+
+
+première page on veux savoir quel type de lien c'est (opérateur et service)
+
+
