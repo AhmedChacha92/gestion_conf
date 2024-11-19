@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Fichiers Modifiés{% endblock %}
+
+{% block content %}
+    <style>
+        .table-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .table-container h1 {
+            text-align: center;
+            color: #333;
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        .table-container th, .table-container td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        .table-container th {
+            background-color: #009879;
+            color: #fff;
+        }
+        .table-container tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+        .table-container a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #009879;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .table-container a:hover {
+            background-color: #007f63;
+        }
+    </style>
+    <div class="table-container">
+        <h1>Liste des Fichiers Modifiés</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom du Fichier</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>{{ file }}</td>
+                    <td>
+                        <a href="{{ file }}">Télécharger</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

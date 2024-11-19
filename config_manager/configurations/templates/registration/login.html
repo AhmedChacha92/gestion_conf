@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Formulaire de Configuration{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block content %}
     <style>
@@ -24,7 +24,7 @@
             margin-bottom: 5px;
             color: #555;
         }
-        .form-container input, .form-container select, .form-container button {
+        .form-container input, .form-container button {
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
@@ -39,13 +39,27 @@
         .form-container button:hover {
             background-color: #007f63;
         }
+        .form-container .forgot-password {
+            text-align: center;
+            margin-top: -10px;
+        }
+        .form-container .forgot-password a {
+            color: #009879;
+            text-decoration: none;
+        }
+        .form-container .forgot-password a:hover {
+            text-decoration: underline;
+        }
     </style>
     <div class="form-container">
-        <h1>Formulaire de Configuration</h1>
+        <h1>Connexion</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Enregistrer</button>
+            <button type="submit">Se connecter</button>
         </form>
+        <div class="forgot-password">
+            <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+        </div>
     </div>
 {% endblock %}

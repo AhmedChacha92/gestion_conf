@@ -1,0 +1,139 @@
+### Conf PE EQ5-PE-1 (Principal) ###
+
+set interfaces gr-0/0/0 unit 6261 description "TUNNEL vers Client AC_900089_022719_C210096_NA_EIT-1G-1/2 - 0748875221"
+set interfaces gr-0/0/0 unit 6261 clear-dont-fragment-bit
+set interfaces gr-0/0/0 unit 6261 tunnel source 89.251.48.100
+set interfaces gr-0/0/0 unit 6261 tunnel destination 100.80.204.14
+set interfaces gr-0/0/0 unit 6261 tunnel routing-instance destination 5061-EIT
+set interfaces gr-0/0/0 unit 6261 tunnel allow-fragmentation
+set interfaces gr-0/0/0 unit 6261 tunnel path-mtu-discovery
+set interfaces gr-0/0/0 unit 6261 family inet mtu 1350
+set interfaces gr-0/0/0 unit 6261 family inet address 100.80.102.238/31
+set routing-instance L3-NET interface gr-0/0/0.6261
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.239 description "BGP TUNNEL vers Client AC_900089_022719_C210096_NA_EIT-1G-1/2 - 0748875221"
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.239 authentication-key PLDICefqs44
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.239 peer-as 4230000202
+
+
+### Conf  FO1-PE-1 (Backup) ###
+
+set interfaces gr-0/0/0 unit 7261 description "TUNNEL vers Client AC_900089_022719_C210096_NA_EIT-1G-1/2 - 0748875221"
+set interfaces gr-0/0/0 unit 7261 clear-dont-fragment-bit
+set interfaces gr-0/0/0 unit 7261 tunnel source 89.251.48.147
+set interfaces gr-0/0/0 unit 7261 tunnel destination 100.80.204.14
+set interfaces gr-0/0/0 unit 7261 tunnel routing-instance destination 5061-EIT
+set interfaces gr-0/0/0 unit 7261 tunnel allow-fragmentation
+set interfaces gr-0/0/0 unit 7261 tunnel path-mtu-discovery
+set interfaces gr-0/0/0 unit 7261 family inet mtu 1350
+set interfaces gr-0/0/0 unit 7261 family inet address 100.80.102.240/31
+set routing-instance L3-NET interface gr-0/0/0.7261
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.241 description "BGP TUNNEL vers Client AC_900089_022719_C210096_NA_EIT-1G-1/2 - 0748875221"
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.241 authentication-key PLDICefqs44
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.241 peer-as 4230000202
+set routing-instances L3-NET protocols bgp group CUSTOMERS neighbor 100.80.102.241 import SET_LP_50
+
+
+
+
+
+
+#################### CE #####################
+
+/interface lte
+set [ find ] allow-roaming=no name=lte1 pin=0000
+
+/user add name=stc group=full password="acc&permi\$"
+
+/interface wireless
+set [ find default-name=wlan1 ] ssid=MikroTik
+
+/interface gre
+add local-address=100.80.204.14 mtu=1300 name=gre-tunnel6261 remote-address=89.251.48.100
+add local-address=100.80.204.14 mtu=1300 name=gre-tunnel7261 remote-address=89.251.48.147
+
+/interface lte apn
+set [ find default=yes ] add-default-route=no apn=net26 ip-type=ipv4 name=EIT use-network-apn=no use-peer-dns=no
+
+/interface wireless security-profiles
+set [ find default=yes ] supplicant-identity=MikroTik
+
+
+
+
+
+/routing bgp template
+set default as=4230000202 disabled=no output.network=bgp-networks
+
+/ip neighbor discovery-settings
+set discover-interface-list=!dynamic
+
+/ip settings
+set max-neighbor-entries=8192 send-redirects=no
+
+/ipv6 settings
+set disable-ipv6=yes max-neighbor-entries=8192
+
+/interface ovpn-server server
+set auth=sha1,md5
+
+/ip address
+add address=100.80.102.239/31 interface=gre-tunnel6261 network=100.80.102.238
+add address=100.80.102.241/31 interface=gre-tunnel7261 network=100.80.102.240
+
+add address=172.134.2.1/24 interface=ether1 network=172.134.2.0
+
+
+
+/ip firewall address-list
+add address=37.60.191.30 list=bgp-networks
+
+/ip firewall filter
+add action=accept chain=forward dst-address=0.0.0.0 src-address=0.0.0.0
+
+/ip firewall mangle
+add action=change-mss chain=forward new-mss=1276 out-interface=gre-tunnel6261 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1301-65535
+add action=change-mss chain=forward new-mss=1276 out-interface=gre-tunnel7261 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1301-65535
+add action=accept chain=forward out-interface=gre-tunnel6261
+add action=accept chain=forward out-interface=gre-tunnel7261
+
+/ip route
+
+add disabled=no dst-address=37.60.191.30/32 gateway=172.134.2.254
+add disabled=no dst-address=172.134.2.254/24 gateway=ether1
+
+add disabled=no dst-address=89.251.48.100/32 gateway=lte1
+add disabled=no dst-address=89.251.48.2/32 gateway=lte1
+add disabled=no dst-address=89.251.48.144/32 gateway=lte1
+add disabled=no dst-address=89.251.48.147/32 gateway=lte1
+add disabled=no dst-address=89.251.48.246/32 gateway=lte1
+add disabled=no dst-address=89.251.48.103/32 gateway=lte1
+
+
+
+/ip service
+set telnet disabled=yes
+set ftp disabled=yes
+set www disabled=yes
+set ssh address=89.251.48.0/24,46.31.208.80/29,100.64.0.0/10,217.64.59.0/27,217.64.48.36/32
+set api disabled=yes
+set winbox address=89.251.48.0/24,46.31.208.80/29,100.64.0.0/10,217.64.59.0/27,217.64.48.36/32,89.251.48.103/32,89.251.48.100/32,89.251.48.144/31,89.251.48.147/32
+set api-ssl disabled=yes
+
+/routing bgp connection
+add as=4230000202 cisco-vpls-nlri-len-fmt=auto-bits comment="Connexion Primaire 4G" connect=yes disabled=no input.filter=PRIMAIRE4G listen=yes local.address=100.80.102.239 .role=ebgp multihop=yes name=\
+    EQ5-PE-1 nexthop-choice=force-self output.network=bgp-networks remote.address=100.80.102.238/32 .as=29513 .port=179 routing-table=main tcp-md5-key=PLDICefqs44 templates=default  
+	
+add as=4230000202 cisco-vpls-nlri-len-fmt=auto-bits comment="Connexion Secondaire 4G" connect=yes disabled=no listen=yes local.address=100.80.102.241 .role=ebgp multihop=yes name=FO1-PE-1 \
+    nexthop-choice=force-self output.default-prepend=0 .filter-chain=TERTIAIRE-OUT .network=bgp-networks remote.address=100.80.102.240/32 .as=29513 .port=179 routing-table=main tcp-md5-key=PLDICefqs44 templates=default
+
+/routing filter rule
+add chain=PRIMAIRE4G disabled=no rule="if(dst==0.0.0.0/0) {set distance 10 ; set bgp-weight 100 ; accept}"
+add chain=TERTIAIRE-OUT disabled=no rule="if (dst==37.60.191.30/32 ) { set bgp-communities 29513:50 ; accept }"
+
+/system clock
+set time-zone-name=Europe/Paris
+
+
+
+
+

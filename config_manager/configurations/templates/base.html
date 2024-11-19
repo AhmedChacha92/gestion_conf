@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}Panneau de Configuration{% endblock %}</title>
+    <title>{% block title %}Mon Application{% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,68 +18,57 @@
         nav ul {
             list-style: none;
             padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
         }
         nav ul li {
-            display: inline;
-            margin: 0 10px;
+            margin: 0 15px;
         }
         nav ul li a {
             color: #fff;
             text-decoration: none;
         }
-        main {
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
-        .styled-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 18px;
-            text-align: left;
-        }
-        .styled-table thead tr {
-            background-color: #009879;
-            color: #ffffff;
-            text-align: left;
-        }
-        .styled-table th, .styled-table td {
-            padding: 12px 15px;
-        }
-        .styled-table tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
-        .styled-table tbody tr:nth-of-type(even) {
-            background-color: #f3f3f3;
-        }
-        .styled-table tbody tr:last-of-type {
-            border-bottom: 2px solid #009879;
-        }
-        .button-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #009879;
+        footer {
+            background-color: #333;
             color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .button-link:hover {
-            background-color: #007f63;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Panneau de Configuration</h1>
+        <h1>Mon Application</h1>
         <nav>
             <ul>
+                <li><a href="{% url 'configurations:home' %}">Accueil</a></li>
+                <li><a href="{% url 'configurations:add' %}">Ajouter un Client</a></li>
+                <li><a href="{% url 'configurations:select_file' %}">Modifier un Fichier</a></li>
                 <li><a href="{% url 'configurations:list' %}">Liste des Configurations</a></li>
-                <li><a href="{% url 'configurations:add' %}" class="button-link">Ajouter une Configuration</a></li>
+                <li><a href="{% url 'login' %}">Connexion</a></li>
+                <li><a href="{% url 'configurations:signup' %}">Inscription</a></li>
+                <li><a href="{% url 'configurations:password_reset' %}">Mot de passe oublié</a></li>
             </ul>
         </nav>
     </header>
-    <main>
+    <div class="container">
         {% block content %}{% endblock %}
-    </main>
+    </div>
+    <footer>
+        <p>Copyright © Yassin Chacha</p>
+        <p>Email: ahmedyassin.chacha@gmail.com | Téléphone: 0699485283</p>
+    </footer>
 </body>
 </html>

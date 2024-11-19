@@ -1,0 +1,68 @@
+set version 18.4R3.3
+set system login user stc uid 2000
+set system login user stc class super-user
+set system login user stc authentication encrypted-password "$5$I3u1BYWi$zyV5IUGCV0qjs.Nesj7PhgBkriYA3OJ7lyuGVNUr6T."
+set system root-authentication encrypted-password "$5$nSWBdIP1$B7UGvdHdX6zLk3tgKveioa5UrFU3bn/iWpwqsA2STRD"
+set system services ssh root-login deny
+set system host-name TEST
+set system time-zone Europe/Paris
+set system name-server 217.64.48.92
+set system name-server 217.64.48.2
+set system syslog archive size 100k
+set system syslog archive files 3
+set system syslog user * any emergency
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+set security alg sip disable
+set security nat source pool SRC_NAT_TO_INTERNET address 37.60.191.30/32
+set security nat source rule-set SRC_NAT from zone LAN
+set security nat source rule-set SRC_NAT to zone WAN
+set security nat source rule-set SRC_NAT rule SRC_NAT match source-address 10.1.1.0/24
+set security nat source rule-set SRC_NAT rule SRC_NAT match destination-address 0.0.0.0/0
+set security nat source rule-set SRC_NAT rule SRC_NAT then source-nat pool SRC_NAT_TO_INTERNET
+set security nat source rule-set SRC_NAT_SELF from zone junos-host
+set security nat source rule-set SRC_NAT_SELF to zone WAN
+set security nat source rule-set SRC_NAT_SELF rule SRC_NAT_SELF match source-address 10.1.1.0/24
+set security nat source rule-set SRC_NAT_SELF rule SRC_NAT_SELF match destination-address 0.0.0.0/0
+set security nat source rule-set SRC_NAT_SELF rule SRC_NAT_SELF then source-nat pool SRC_NAT_TO_INTERNET
+set security policies from-zone WAN to-zone WAN policy PERMIT match source-address any
+set security policies from-zone WAN to-zone WAN policy PERMIT match destination-address any
+set security policies from-zone WAN to-zone WAN policy PERMIT match application any
+set security policies from-zone WAN to-zone WAN policy PERMIT then permit
+set security policies from-zone WAN to-zone LAN policy PERMIT match source-address any
+set security policies from-zone WAN to-zone LAN policy PERMIT match destination-address any
+set security policies from-zone WAN to-zone LAN policy PERMIT match application any
+set security policies from-zone WAN to-zone LAN policy PERMIT then permit
+set security policies from-zone LAN to-zone WAN policy PERMIT match source-address any
+set security policies from-zone LAN to-zone WAN policy PERMIT match destination-address any
+set security policies from-zone LAN to-zone WAN policy PERMIT match application any
+set security policies from-zone LAN to-zone WAN policy PERMIT then permit
+set security policies from-zone LAN to-zone LAN policy PERMIT match source-address any
+set security policies from-zone LAN to-zone LAN policy PERMIT match destination-address any
+set security policies from-zone LAN to-zone LAN policy PERMIT match application any
+set security policies from-zone LAN to-zone LAN policy PERMIT then permit
+set security zones security-zone WAN host-inbound-traffic system-services all
+set security zones security-zone WAN host-inbound-traffic protocols all
+set security zones security-zone WAN interfaces ge-0/0/0.0
+set security zones security-zone WAN interfaces lo0.0
+set security zones security-zone LAN host-inbound-traffic system-services all
+set security zones security-zone LAN host-inbound-traffic protocols all
+set security zones security-zone LAN interfaces ge-0/0/1.0
+set interfaces ge-0/0/0 description WAN
+set interfaces ge-0/0/0 unit 0 family inet address 192.168.50.254/24
+set interfaces ge-0/0/1 description DATA
+set interfaces ge-0/0/1 unit 0 family inet address 10.1.1.254/24
+set interfaces lo0 description "Loopback WAN"
+set interfaces lo0 unit 0 family inet address 37.60.191.30/32
+set routing-options static route 0.0.0.0/0 next-hop 192.168.50.1
+
+set security nat source pool SRC_NAT_TO_INTERNET address 37.60.191.30/32
+set interfaces lo0 unit 0 family inet address 37.60.191.30/32
+set interfaces ge-0/0/0 unit 0 family inet address 172.134.2.254/24
+set routing-options static route 0.0.0.0/0 next-hop 172.134.2.1
+
+delete security nat source pool SRC_NAT_TO_INTERNET address 37.60.191.29/32
+delete interfaces lo0 unit 0 family inet address 37.60.191.29/32
+delete interfaces ge-0/0/0 unit 0 family inet address 192.168.50.254/24
+delete routing-options static route 0.0.0.0/0 next-hop 192.168.50.1

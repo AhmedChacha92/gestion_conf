@@ -3,33 +3,108 @@
 {% block title %}Liste des Configurations{% endblock %}
 
 {% block content %}
-    <h1>Liste des Configurations</h1>
-    <table class="styled-table">
-        <thead>
-            <tr>
-                <th>Nom du Client</th>
-                <th>Opérateur</th>
-                <th>Service</th>
-                <th>IP Privée</th>
-                <th>IP Publique</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for config in configs %}
-            <tr>
-                <td>{{ config.client_name }}</td>
-                <td>{{ config.operator }}</td>
-                <td>{{ config.service }}</td>
-                <td>{{ config.ip_private }}</td>
-                <td>{{ config.ip_public }}</td>
-                <td>
-                    <a href="{% url 'configurations:edit' config.pk %}">Modifier</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'configurations:add' %}" class="button-link">Ajouter une Configuration</a>
-    <a href="{% url 'configurations:download_excel' %}" class="button-link">Télécharger Excel</a>
+    <style>
+        .table-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .table-container h1 {
+            text-align: center;
+            color: #333;
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        .table-container th, .table-container td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        .table-container th {
+            background-color: #009879;
+            color: #fff;
+        }
+        .table-container tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+        .table-container a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #009879;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .table-container a:hover {
+            background-color: #007f63;
+        }
+        .filter-form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .filter-form select, .filter-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+    <div class="table-container">
+        <h1>Liste des Configurations</h1>
+        <a href="{% url 'configurations:add' %}">Ajouter une Configuration</a>
+        <form method="get" class="filter-form">
+            <select name="operator">
+                <option value="">Tous les opérateurs</option>
+                <option value="SFR">SFR</option>
+                <option value="Bouygues">Bouygues</option>
+                <option value="Orange">Orange</option>
+            </select>
+            <select name="service">
+                <option value="">Tous les services</option>
+                <option value="Internet">Internet</option>
+                <option value="Telephony">Telephony</option>
+                <option value="Both">Both</option>
+            </select>
+            <input type="text" name="dhcp" placeholder="Rechercher par DHCP">
+            <button type="submit">Filtrer</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>Opérateur</th>
+                    <th>Service</th>
+                    <th>Nom du Client</th>
+                    <th>DHCP</th>
+                    <th>IP Privée</th>
+                    <th>IP Publique</th>
+                    <th>Interco</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for config in configs %}
+                <tr>
+                    <td>{{ config.operator }}</td>
+                    <td>{{ config.service }}</td>
+                    <td>{{ config.client_name }}</td>
+                    <td>{{ config.dhcp }}</td>
+                    <td>{{ config.ip_private }}</td>
+                    <td>{{ config.ip_public }}</td>
+                    <td>{{ config.interco }}</td>
+                    <td>
+                        <a href="{% url 'configurations:edit' config.pk %}">Modifier</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

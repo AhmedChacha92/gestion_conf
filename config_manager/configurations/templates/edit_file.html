@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Formulaire de Configuration{% endblock %}
+{% block title %}Modifier le Fichier{% endblock %}
 
 {% block content %}
     <style>
@@ -41,11 +41,11 @@
         }
     </style>
     <div class="form-container">
-        <h1>Formulaire de Configuration</h1>
+        <h1>Modifier le Fichier: {{ filename }}</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Enregistrer</button>
+            <button type="submit">Enregistrer et Télécharger</button>
         </form>
     </div>
 {% endblock %}

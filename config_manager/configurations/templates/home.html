@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    <h1>Accueil</h1>
+    <a href="{% url 'configurations:add' %}">Ajouter un Client</a>
+    <a href="{% url 'configurations:select_file' %}">Modifier un Fichier</a>
+{% endblock %}
